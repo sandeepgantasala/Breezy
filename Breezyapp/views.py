@@ -2,6 +2,7 @@ import requests
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response 
+from django.conf import settings
 
 def current_weather(request):
     city = request.GET.get('city', 'New York')  # Default to New York
@@ -26,7 +27,7 @@ def current_weather(request):
 def forecast(request):
     city = request.GET.get('city', 'New York')
     unit = request.GET.get('unit', 'metric') 
-    api_key = 'a424055e1768cbb64f5f85adb148cf5e'
+    api_key = settings.OPENWEATHER_API_KEY
     url = f'https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units={unit}'
     response = requests.get(url)
     forecast_data = response.json()

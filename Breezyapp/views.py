@@ -26,12 +26,12 @@ def current_weather(request):
 
 def forecast(request):
     city = request.GET.get('city', 'New York')
-    unit = request.GET.get('unit', 'metric') 
+    unit = request.GET.get('unit', 'imperial')
     api_key = settings.OPENWEATHER_API_KEY
     url = f'https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units={unit}'
     response = requests.get(url)
     forecast_data = response.json()
-    unit_symbol = '°C' if unit == 'metric' else '°F'
+    unit_symbol = '°F' if unit == 'imperial' else '°C'
 
     if response.status_code == 200 and 'list' in forecast_data:
         forecast_list = []

@@ -3,18 +3,18 @@
 {% block content %}
 <style>
     .unit-select {
-        float: right; /* Align the dropdown to the right */
+        float: right; 
     }
 </style>
 
-<form method="get" action="">
-    <input type="text" name="city" placeholder="Enter city" required>
+<!-- Add an ID to the form for JavaScript -->
+<form id="weatherForm" method="get" action="">
+    <input type="text" name="city" placeholder="Enter city" value="{{ city }}" required>
     
-    <!-- Dropdown aligned to the right -->
-    <select name="unit" class="unit-select">
+    <!-- Dropdown with event listener -->
+    <select name="unit" class="unit-select" id="unitSelect">
         <option value="imperial" {% if unit == 'imperial' %}selected{% endif %}>Fahrenheit</option>
         <option value="metric" {% if unit == 'metric' %}selected{% endif %}>Celsius</option>
-        
     </select>
     
     <button type="submit">Get Weather</button>
@@ -23,18 +23,35 @@
 <h1>Weather in {{ city }}</h1>
 <p>Temperature: {{ temperature }} {{ unit_symbol }}</p>
 <p>Description: {{ description }}</p>
+
+<!-- Add JavaScript to auto-submit the form when the unit changes -->
+<script>
+    document.getElementById('unitSelect').addEventListener('change', function() {
+        document.getElementById('weatherForm').submit();
+    });
+</script>
 {% endblock %}
 
-
-{% comment %} {% extends "base.html" %}
+{% comment %} 
+{% extends "base.html" %}
 
 {% block content %}
+<style>
+    .unit-select {
+        float: right; /* Align the dropdown to the right */
+    }
+</style>
+
 <form method="get" action="">
-    <input type="text" name="city" placeholder="Enter city" required>
-    <select name="unit">
-        <option value="metric" {% if unit == 'metric' %}selected{% endif %}>Celsius</option>
+    <!-- Preserve the city value in the input field -->
+    <input type="text" name="city" placeholder="Enter city" value="{{ city }}" required>
+    
+    <!-- Dropdown aligned to the right -->
+    <select name="unit" class="unit-select">
         <option value="imperial" {% if unit == 'imperial' %}selected{% endif %}>Fahrenheit</option>
+        <option value="metric" {% if unit == 'metric' %}selected{% endif %}>Celsius</option>
     </select>
+    
     <button type="submit">Get Weather</button>
 </form>
 
@@ -42,3 +59,4 @@
 <p>Temperature: {{ temperature }} {{ unit_symbol }}</p>
 <p>Description: {{ description }}</p>
 {% endblock %} {% endcomment %}
+

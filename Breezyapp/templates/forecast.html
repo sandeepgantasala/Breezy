@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>5-Day Weather Forecast for {{ city }}</h1>
+
+<form method="get" action="">
+    <input type="text" name="city" placeholder="Enter city" required>
+    <button type="submit">Get Forecast</button>
+</form>
+
+{% if error %}
+    <h2>Error: {{ error }}</h2>
+{% else %}
+    <ul>
+        {% for forecast in forecast_list %}
+            <li>
+                <strong>Date & Time:</strong> {{ forecast.datetime }}<br>
+                <strong>Temperature:</strong> {{ forecast.temperature }} °C<br>
+                <strong>Condition:</strong> {{ forecast.description }}<br>
+                <img src="http://openweathermap.org/img/wn/{{ forecast.icon }}.png" alt="{{ forecast.description }}">
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

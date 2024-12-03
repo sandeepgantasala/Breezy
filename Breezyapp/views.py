@@ -3,33 +3,34 @@ from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response 
 
-
-
-
-
 def current_weather(request):
     city = request.GET.get('city', 'New York')  # Default to New York
+    unit = request.GET.get('unit', 'metric') 
     api_key = 'a424055e1768cbb64f5f85adb148cf5e'
-    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric'
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units={unit}'
     response = requests.get(url)
     weather_data = response.json()
     
+    unit_symbol = '°C' if unit == 'metric' else '°F'
 
     context = {
         'city': city,
         'temperature': weather_data.get('main', {}).get('temp', 'N/A'),
         'description': weather_data.get('weather', [{}])[0].get('description', 'N/A'),
+        'unit': unit,
+        'unit_symbol': unit_symbol,
     }
     return render(request, 'current_weather.html', context)
 
 
 def forecast(request):
     city = request.GET.get('city', 'New York')
+    unit = request.GET.get('unit', 'metric') 
     api_key = 'a424055e1768cbb64f5f85adb148cf5e'
-    url = f'https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units=metric'
+    url = f'https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units={unit}'
     response = requests.get(url)
     forecast_data = response.json()
-   
+    unit_symbol = '°C' if unit == 'metric' else '°F'
 
     if response.status_code == 200 and 'list' in forecast_data:
         forecast_list = []
@@ -44,6 +45,8 @@ def forecast(request):
         context = {
             'city': city,
             'forecast_list': forecast_list,
+            'unit': unit,
+            'unit_symbol': unit_symbol,
         }
     else:
         context = {

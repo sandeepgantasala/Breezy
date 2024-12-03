@@ -5,6 +5,10 @@
 
 <form method="get" action="">
     <input type="text" name="city" placeholder="Enter city" required>
+    <select name="unit">
+        <option value="metric" {% if unit == 'metric' %}selected{% endif %}>Celsius</option>
+        <option value="imperial" {% if unit == 'imperial' %}selected{% endif %}>Fahrenheit</option>
+    </select>
     <button type="submit">Get Forecast</button>
 </form>
 
@@ -15,7 +19,7 @@
         {% for forecast in forecast_list %}
             <li>
                 <strong>Date & Time:</strong> {{ forecast.datetime }}<br>
-                <strong>Temperature:</strong> {{ forecast.temperature }} °C<br>
+                <strong>Temperature:</strong> {{ forecast.temperature }} {{ unit_symbol }}<br>
                 <strong>Condition:</strong> {{ forecast.description }}<br>
                 <img src="http://openweathermap.org/img/wn/{{ forecast.icon }}.png" alt="{{ forecast.description }}">
             </li>

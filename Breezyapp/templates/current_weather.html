@@ -3,10 +3,14 @@
 {% block content %}
 <form method="get" action="">
     <input type="text" name="city" placeholder="Enter city" required>
+    <select name="unit">
+        <option value="metric" {% if unit == 'metric' %}selected{% endif %}>Celsius</option>
+        <option value="imperial" {% if unit == 'imperial' %}selected{% endif %}>Fahrenheit</option>
+    </select>
     <button type="submit">Get Weather</button>
 </form>
 
 <h1>Weather in {{ city }}</h1>
-<p>Temperature: {{ temperature }} °C</p>
+<p>Temperature: {{ temperature }} {{ unit_symbol }}</p>
 <p>Description: {{ description }}</p>
 {% endblock %}

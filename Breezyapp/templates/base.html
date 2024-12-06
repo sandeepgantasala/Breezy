@@ -1,18 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
+    <title>Weather Breezy</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
-<body style="background-color:darkcyan;">
-    <header>
-        <h1>Weather App</h1>
-        <nav>
-            <a href="/">Current Weather</a> | <a href="/forecast/">Forecast</a>
-        </nav>
+<body class="weather-app-body">
+    <header class="weather-app-header">
+        <h1 class="weather-app-title">Breezy Weather</h1>
+        {% comment %} <nav class="weather-app-nav">
+            <a href="/" class="weather-app-link">Current Weather</a> | 
+            <a href="/forecast/" class="weather-app-link">Forecast</a>
+        </nav> {% endcomment %}
     </header>
-    <main>
+    <main class="weather-app-main">
         {% block content %}{% endblock %}
     </main>
 </body>

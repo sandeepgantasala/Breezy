@@ -100,11 +100,8 @@ Breezy/
 
 ## **Screenshots**
 ### **Home Page**
-<img width="1470" alt="Screenshot 2024-12-03 at 1 40 03 PM" src="https://github.com/user-attachments/assets/5c0a99c1-c8ec-4dc0-86fb-b3cb45709c0d">
+<img width="987" alt="Screenshot 2024-12-10 at 12 06 01 PM" src="https://github.com/user-attachments/assets/b97425a5-d219-4eac-a4f0-6b3a0d3e9e34">
 
-
-### **5-Day Forecast**
-<img width="1470" alt="Screenshot 2024-12-03 at 1 39 43 PM" src="https://github.com/user-attachments/assets/ed933dd9-b163-49c9-843f-993edd1a9b88">
 
 ---
 

@@ -1,3 +1,57 @@
+# import requests
+# from django.shortcuts import render 
+# from django.conf import settings
+
+# def current_weather(request): #request: Represents the HTTP request made to this view.
+#     city=request.GET.get("city","New York")
+#     unit=request.GET.get("unit","imperial")
+#     unit_symbol="°F'" if unit== "imperial" else "°C"
+#     api_key=settings.OPENWEATHER_API_KEY
+#     current_weather_url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units={unit}'
+#     forecast_url = f'https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units={unit}'
+#     current_weather_response=requests.get(current_weather_url)
+#     current_weather_data=current_weather_response.json()
+#     forecast_response=requests.get(forecast_url)
+#     forecast_data=forecast_response.json()
+    
+#     temperature=current_weather_data.get("main",{}).get("temp","N/A")
+#     description = current_weather_data.get('weather', [{}])[0].get('description', 'N/A').capitalize()
+#     icon=current_weather_data.get("weather",[{}])[0].get("icon","N/A")
+
+#     context={
+#         "city":city,
+#         "temperature":temperature,
+#         "description":description,
+#         "icon":icon,
+#         "unit_symbol":unit_symbol                
+#     }
+
+#     return render(request,"current_weather.html",context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import requests
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
@@ -43,7 +97,7 @@ def current_weather(request):
         'unit_symbol': unit_symbol,
         'current_weather': {
             'temperature': current_weather_data.get('main', {}).get('temp', 'N/A'),
-            'description': current_weather_data.get('weather', [{}])[0].get('description', 'N/A').upper(),
+            'description': current_weather_data.get('weather', [{}])[0].get('description', 'N/A').capitalize(),
             'icon': current_weather_data.get('weather', [{}])[0].get('icon', 'N/A'),
         },
         'forecast_list': forecast_list,

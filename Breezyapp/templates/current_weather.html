@@ -1,105 +1,236 @@
-{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Breezy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include styles directly -->
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #87cefa, #1e90ff);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            transition: background 0.5s, color 0.5s;
+        }
 
-{% block content %}
-<div class="weather-container">
-    <!-- Form for Weather Input -->
-    <form id="weatherForm" method="get" action="">
-        <input class="citybox" type="text" name="city" placeholder="Enter city" value="{{ city }}" required>
-        
-        <!-- Dropdown for Units -->
-        <select name="unit" class="unit-select" id="unitSelect">
-            <option value="imperial" {% if unit == 'imperial' %}selected{% endif %}>Fahrenheit</option>
-            <option value="metric" {% if unit == 'metric' %}selected{% endif %}>Celsius</option>
-        </select>
-        
-        <button class="btn1" type="submit">Get Weather</button>
-    </form>
+        body.dark-mode {
+            background: #1e1e1e;
+            color: #ccc;
+        }
 
-    <!-- Current Weather Section -->
-    <div class="weather-details">
-        <h1>Weather in {{ city }}</h1>
-        <p><strong>Temperature:</strong> {{ current_weather.temperature }} {{ unit_symbol }}</p>
-        <div class="weather-icon">
-            <img src="http://openweathermap.org/img/wn/{{ current_weather.icon }}@2x.png">
+        .weather-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .current-weather {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .current-weather h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        .current-weather p {
+            margin: 5px 0;
+        }
+
+        .current-weather .temperature {
+            font-size: 4rem;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .current-weather .details {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .details .detail-item {
+            text-align: center;
+        }
+
+        .details .detail-item img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+
+        .forecast {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .forecast-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            margin: 0 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s;
+        }
+
+        body.dark-mode .forecast-item {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .forecast-item img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .forecast-item h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .forecast-item p {
+            margin: 5px 0;
+        }
+
+        /* Search and Toggle Section */
+        .search-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-toggle input, .search-toggle select {
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+
+        .search-toggle button {
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-toggle button:hover {
+            background: #357ABD;
+        }
+
+        .dark-mode-toggle {
+            cursor: pointer;
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .current-weather .details {
+                flex-direction: column;
+            }
+
+            .forecast {
+                flex-wrap: wrap;
+            }
+
+            .forecast-item {
+                flex: 1 1 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-container">
+        <!-- Search and Unit Toggle Section -->
+        <div class="search-toggle">
+            <form id="weatherForm" method="get" action="" style="flex: 1;">
+                <input class="citybox" type="text" name="city" placeholder="Enter city" value="{{ city }}" required>
+                <select name="unit" class="unit-select" id="unitSelect">
+                    <option value="imperial" {% if unit == 'imperial' %}selected{% endif %}>Fahrenheit</option>
+                    <option value="metric" {% if unit == 'metric' %}selected{% endif %}>Celsius</option>
+                </select>
+                <button class="btn1" type="submit">Get Weather</button>
+            </form>
+            <div>
+                <button class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
+            </div>
         </div>
-        <p><strong>Description:</strong> {{current_weather.description }}</p>
-    </div>
-</div>
 
-<!-- 5-Day Forecast Section -->
-<div class="forecast-container">
-    <h2>5-Day Weather Forecast for {{ city }}</h2>
+        <!-- Current Weather Section -->
+        <div class="current-weather">
+            <h1>Weather in {{ city }}</h1>
+            <p class="temperature">{{ current_weather.temperature }} {{ unit_symbol }}</p>
+            <p>{{ current_weather.description }}</p>
+            <div class="details">
+                <div class="detail-item">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/rain.png" alt="Rain Icon">
+                    <p>20%</p>
+                </div>
+                <div class="detail-item">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/wind.png" alt="Wind Icon">
+                    <p>15 km/h</p>
+                </div>
+                <div class="detail-item">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/compass.png" alt="Direction Icon">
+                    <p>West</p>
+                </div>
+                <div class="detail-item">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/barometer.png" alt="Pressure Icon">
+                    <p>1023 mb</p>
+                </div>
+            </div>
+        </div>
 
-    <!-- Error Message -->
-    {% if error %}
-        <h2 class="forecast-error">Error: {{ error }}</h2>
-    {% else %}
-        <!-- Weather Forecast List -->
-        <ul class="forecast-list">
+        <!-- 5-Day Forecast Section -->
+        <div class="forecast">
             {% for forecast in forecast_list %}
-                <li class="forecast-item">
-                    <div class="forecast-date">
-                        <strong>Date & Time:</strong> {{ forecast.datetime }}
-                    </div>
-                    <div class="forecast-temperature">
-                        <strong>Temperature:</strong> {{ forecast.temperature }} {{ unit_symbol }}
-                    </div>
-                    <div class="forecast-condition">
-                        <strong>Condition:</strong> {{ forecast.description | upper}}
-                    </div>
-                    <div class="forecast-icon">
-                        <img src="http://openweathermap.org/img/wn/{{ forecast.icon }}.png" alt="{{ forecast.description }}">
-                    </div>
-                </li>
-                <hr class="forecast-divider">
+            <div class="forecast-item">
+                <img src="http://openweathermap.org/img/wn/{{ forecast.icon }}@2x.png" alt="Forecast Icon">
+                <h3>{{ forecast.date|date:"l" }}</h3> <!-- Day of the week -->
+                <p>{{ forecast.date|date:"M d, Y" }}</p> <!-- Full date -->
+                <p>{{ forecast.temperature }} {{ unit_symbol }}</p>
+                <p>{{ forecast.description }}</p>
+            </div>
             {% endfor %}
-        </ul>
-    {% endif %}
-</div>
-
-<!-- JavaScript to auto-submit the form when the unit changes -->
-<script>
-    document.getElementById('unitSelect').addEventListener('change', function() {
-        // Auto-submit the form when unit changes
-        document.getElementById('weatherForm').submit();
-    });
-</script>
-{% endblock %}
-
-
-
-{% comment %} {% extends "base.html" %}
-
-{% block content %}
-<div class="weather-container">
-    <!-- Form for Weather Input -->
-    <form id="weatherForm" method="get" action="">
-        <input class="citybox" type="text" name="city" placeholder="Enter city" value="{{ city }}" required>
-        
-        <!-- Dropdown for Units -->
-        <select name="unit" class="unit-select" id="unitSelect">
-            <option value="imperial" {% if unit == 'imperial' %}selected{% endif %}>Fahrenheit</option>
-            <option value="metric" {% if unit == 'metric' %}selected{% endif %}>Celsius</option>
-        </select>
-        
-        <button class="btn1" type="submit">Get Weather</button>
-    </form>
-
-    <!-- Weather Details -->
-    <div class="weather-details">
-        <h1>Weather in {{ city }}</h1>
-        <p><strong>Temperature:</strong> {{ temperature }} {{ unit_symbol }}</p>
-        <div class="weather-icon">
-            <img src="http://openweathermap.org/img/wn/{{ weather_icon }}@2x.png">
         </div>
-        <p><strong>Description:</strong> {{ description }}</p>
+               
     </div>
-</div>
 
-<!-- Add JavaScript to auto-submit the form when the unit changes -->
-<script>
-    document.getElementById('unitSelect').addEventListener('change', function() {
-        document.getElementById('weatherForm').submit();
-    });
-</script>
-{% endblock %} {% endcomment %}
+    <script>
+        // Auto-submit the form when the unit changes
+        document.getElementById('unitSelect').addEventListener('change', function () {
+            document.getElementById('weatherForm').submit();
+        });
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+</body>
+</html>
